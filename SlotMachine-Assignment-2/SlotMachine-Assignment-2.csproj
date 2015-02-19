@@ -87,6 +87,7 @@
     <Content Include="assets\images\spin_button.png" />
     <Content Include="assets\images\spin_button_hover.png" />
     <Content Include="css\game.css" />
+    <Content Include="css\main.css" />
     <Content Include="index.html" />
     <Content Include="Scripts\lib\easeljs-0.8.0.min.js" />
     <Content Include="Scripts\lib\preloadjs-0.6.0.min.js" />

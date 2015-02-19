@@ -1,0 +1,16 @@
+﻿ul#playerStats {
+    list-style-type: none;
+    padding: 0;
+    margin: 5px;
+}
+
+#canvas{
+    border: dashed 1px black;
+}
+
+#follow{
+    font-family: 'Trebuchet MS', 'Lucida Sans Unicode', 'Lucida Grande', 'Lucida Sans', Arial, sans-serif;
+    font-size:16px;
+}
+
+
