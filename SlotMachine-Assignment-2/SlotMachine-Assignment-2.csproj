@@ -59,6 +59,7 @@
     <Reference Include="System.EnterpriseServices" />
   </ItemGroup>
   <ItemGroup>
+    <Content Include="co-ordinates.xlsx" />
     <None Include="Web.Debug.config">
       <DependentUpon>Web.config</DependentUpon>
     </None>
@@ -67,6 +68,24 @@
     </None>
   </ItemGroup>
   <ItemGroup>
+    <Content Include="assets\images\background.png" />
+    <Content Include="assets\images\BackGround22.png" />
+    <Content Include="assets\images\banana.png" />
+    <Content Include="assets\images\bell.png" />
+    <Content Include="assets\images\bet_10.png" />
+    <Content Include="assets\images\bet_max.png" />
+    <Content Include="assets\images\bet_one.png" />
+    <Content Include="assets\images\blank.png" />
+    <Content Include="assets\images\cherry.png" />
+    <Content Include="assets\images\crown.png" />
+    <Content Include="assets\images\exoit_button.png" />
+    <Content Include="assets\images\grape.png" />
+    <Content Include="assets\images\grapes.png" />
+    <Content Include="assets\images\orange.png" />
+    <Content Include="assets\images\reset_button.png" />
+    <Content Include="assets\images\seven.png" />
+    <Content Include="assets\images\spin_button.png" />
+    <Content Include="assets\images\spin_button_hover.png" />
     <Content Include="css\game.css" />
     <Content Include="index.html" />
     <Content Include="Scripts\lib\easeljs-0.8.0.min.js" />
@@ -88,9 +107,7 @@
     <TypeScriptCompile Include="Scripts\lib\tweenjs.d.ts" />
   </ItemGroup>
   <ItemGroup>
-    <Folder Include="assets\audio\" />
-    <Folder Include="assets\fonts\" />
-    <Folder Include="assets\images\" />
+    <Folder Include="assets\sounds\" />
   </ItemGroup>
   <PropertyGroup>
     <VisualStudioVersion Condition="'$(VisualStudioVersion)' == ''">10.0</VisualStudioVersion>
