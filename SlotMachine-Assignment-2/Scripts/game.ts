@@ -14,8 +14,21 @@ var betText: createjs.Text;
 var winningsText: createjs.Text;
 var playerAmountText: createjs.Text;
 var winRatioText: createjs.Text;
+var jackpotImg: createjs.Bitmap;
 var tiles: createjs.Bitmap[] = [];
 var reelContainers: createjs.Container[] = [];
+
+
+createjs.Sound.registerSound({ id: "click", src: "assets/sounds/click.mp3" });
+
+createjs.Sound.registerSound({ id: "hover", src: "assets/sounds/hover.mp3" });
+
+createjs.Sound.registerSound({ id: "won", src: "assets/sounds/won.mp3" });
+
+createjs.Sound.registerSound({ id: "spin", src: "assets/sounds/spin.mp3" });
+
+createjs.Sound.registerSound({ id: "jackpot", src: "assets/sounds/jackpot.mp3" });
+
 
 
 // Game Variables
@@ -72,7 +85,25 @@ function resetFruitTally() {
 
 }
 
+/* Utility function to reset the player stats */
+function resetAll() {
+    playerMoney = 1000;
+    winnings = 0;
+    jackpot = 5000;
+    turn = 0;
+    playerBet = 0;
+    winNumber = 0;
+    lossNumber = 0;
+    winRatio = 0;
+    showPlayerStats();
 
+    winRatioText.text = winnings.toString();
+    winningsText.text = winnings.toString();
+    betText.text = playerBet.toString();
+
+    game.removeChild(jackpotImg);
+    createjs.Sound.play("click");
+}
 
 
 // Event handlers
@@ -84,7 +115,7 @@ function spinButtonOut() {
 function spinButtonOver() {
 
     spinButton.alpha = 0.5;
-    
+    createjs.Sound.play("hover");
 }
 function resetButtonOut() {
     resetButton.alpha = 1.0;
@@ -93,7 +124,7 @@ function resetButtonOut() {
 function resetButtonOver() {
 
     resetButton.alpha = 0.5;
-    
+    createjs.Sound.play("hover");
 
 }
 function exitButtonOut() {
@@ -103,7 +134,7 @@ function exitButtonOut() {
 function exitButtonOver() {
 
     exitButton.alpha = 0.8;
-   
+    createjs.Sound.play("hover");
 
 }
 function betMaxButtonOut() {
@@ -113,7 +144,7 @@ function betMaxButtonOut() {
 function betMaxButtonOver() {
 
     betMax.alpha = 0.5;
-   
+    createjs.Sound.play("hover");
 
 }
 function betOneButtonOut() {
@@ -123,7 +154,7 @@ function betOneButtonOut() {
 function betOneButtonOver() {
 
     betOne.alpha = 0.5;
-   
+    createjs.Sound.play("hover");
 
 }
 function bet10ButtonOut() {
@@ -133,7 +164,7 @@ function bet10ButtonOut() {
 function bet10ButtonOver() {
 
     bet10.alpha = 0.5;
-   
+    createjs.Sound.play("hover");
 }
 
 
@@ -143,7 +174,7 @@ function showWinMessage() {
     winningsText.text = winnings.toString();
     resetFruitTally();
     checkJackPot();
-    
+    createjs.Sound.play("won");
 
 }
 
@@ -158,66 +189,70 @@ function showLossMessage() {
 function spinReels() {
 
     createjs.Sound.play("spin");
+    game.removeChild(jackpotImg);
+    if (playerBet != 0) {
+        if (playerMoney == 0) {
+            if (confirm("You ran out of Money! \nDo you want to play again?")) {
+                resetAll();
+                showPlayerStats();
+            }
+        }
+        else if (playerBet > playerMoney) {
 
-    if (playerMoney == 0) {
-        if (confirm("You ran out of Money! \nDo you want to play again?")) {
-            resetAll();
+            alert("You don't have enough Money to place that bet.");
+
+        }
+
+        else if (playerBet <= playerMoney) {
+
+            // Add Spin Reels code here
+            spinResult = Reels();
+            fruits = spinResult[0] + " - " + spinResult[1] + " - " + spinResult[2];
+            console.log(fruits);
+
+
+            for (var tile = 0; tile < 3; tile++) {
+
+
+
+                reelContainers[tile].removeAllChildren();
+
+                tiles[tile] = new createjs.Bitmap("assets/images/" + spinResult[tile] + ".png");
+                tiles[tile].x = 110 + (113 * tile);
+                tiles[tile].y = 239;
+
+
+                reelContainers[tile].addChild(tiles[tile]);
+
+                console.log(game.getNumChildren());
+            }
+            determineWinnings();
             showPlayerStats();
         }
     }
-    else if (playerBet > playerMoney) {
-
-        alert("You don't have enough Money to place that bet.");
-
-    }
-
-    else if (playerBet <= playerMoney) {
-
-        // Add Spin Reels code here
-        spinResult = Reels();
-        fruits = spinResult[0] + " - " + spinResult[1] + " - " + spinResult[2];
-        console.log(fruits);
-
-
-        for (var tile = 0; tile < 3; tile++) {
-
-
-
-            reelContainers[tile].removeAllChildren();
-
-            tiles[tile] = new createjs.Bitmap("assets/images/" + spinResult[tile] + ".png");
-            tiles[tile].x = 110 + (113 * tile);
-            tiles[tile].y = 239;
-
-
-            reelContainers[tile].addChild(tiles[tile]);
-
-            console.log(game.getNumChildren());
-        }
-        determineWinnings();
-        showPlayerStats();
+    else {
+        alert("Please enter a bet amount");
     }
 }
-
 function bet1() {
     playerBet = 1;
     betText.text = playerBet.toString();
 
-    
+    createjs.Sound.play("click");
 } //function bet1 ends
 
 function betTen() {
     playerBet = 10;
     betText.text = playerBet.toString();
 
-   
+    createjs.Sound.play("click");
 } //function bet10 ends
 
 function bet100() {
     playerBet = 100;
     betText.text = playerBet.toString();
 
-  
+    createjs.Sound.play("click");
 } //function bet100 ends
 
 /* Utility function to check if a value falls within a range of bounds */
@@ -421,7 +456,12 @@ function createUI(): void {
     betText = new createjs.Text(playerBet.toString(), "30px Consolas", "#F00909");
     betText.x = 355;
     betText.y = 345;
+    // betText.regX = betText.getBounds().width
     game.addChild(betText);
+
+    jackpotImg = new createjs.Bitmap("assets/images/jackpot.png");
+
+    // game.addChild(jackpotImg);
 
 }
 
@@ -433,11 +473,13 @@ function checkJackPot() {
     var jackPotTry = Math.floor(Math.random() * 51 + 1);
     var jackPotWin = Math.floor(Math.random() * 51 + 1);
     if (jackPotTry == jackPotWin) {
+        game.addChild(jackpotImg);
+        jackpotImg.x = 71;
+        jackpotImg.y = 78;
         alert("You Won the $" + jackpot + " Jackpot!!");
         playerMoney += jackpot;
         jackpot = 1000;
-
-      
+        createjs.Sound.play("jackpot");
     }
 }
 
