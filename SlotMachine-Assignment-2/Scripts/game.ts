@@ -10,7 +10,12 @@ var bet10: createjs.Bitmap;
 var betOne: createjs.Bitmap;
 var betMax: createjs.Bitmap;
 var exitButton: createjs.Bitmap;
-
+var betText: createjs.Text;
+var winningsText: createjs.Text;
+var playerAmountText: createjs.Text;
+var winRatioText: createjs.Text;
+var tiles: createjs.Bitmap[] = [];
+var reelContainers: createjs.Container[] = [];
 
 
 // Game Variables
@@ -70,9 +75,150 @@ function resetFruitTally() {
 
 
 
+// Event handlers
+
+function spinButtonOut() {
+    spinButton.alpha = 1.0;
+}
+
+function spinButtonOver() {
+
+    spinButton.alpha = 0.5;
+    
+}
+function resetButtonOut() {
+    resetButton.alpha = 1.0;
+}
+
+function resetButtonOver() {
+
+    resetButton.alpha = 0.5;
+    
+
+}
+function exitButtonOut() {
+    exitButton.alpha = 1.0;
+}
+
+function exitButtonOver() {
+
+    exitButton.alpha = 0.8;
+   
+
+}
+function betMaxButtonOut() {
+    betMax.alpha = 1.0;
+}
+
+function betMaxButtonOver() {
+
+    betMax.alpha = 0.5;
+   
+
+}
+function betOneButtonOut() {
+    betOne.alpha = 1.0;
+}
+
+function betOneButtonOver() {
+
+    betOne.alpha = 0.5;
+   
+
+}
+function bet10ButtonOut() {
+    bet10.alpha = 1.0;
+}
+
+function bet10ButtonOver() {
+
+    bet10.alpha = 0.5;
+   
+}
+
+
+/* Utility function to show a win message and increase player money */
+function showWinMessage() {
+    playerMoney += winnings;
+    winningsText.text = winnings.toString();
+    resetFruitTally();
+    checkJackPot();
+    
+
+}
+
+/* Utility function to show a loss message and reduce player money */
+function showLossMessage() {
+    playerMoney -= playerBet;
+    winningsText.text = "0";
+    resetFruitTally();
+}
+
+
+function spinReels() {
+
+    createjs.Sound.play("spin");
+
+    if (playerMoney == 0) {
+        if (confirm("You ran out of Money! \nDo you want to play again?")) {
+            resetAll();
+            showPlayerStats();
+        }
+    }
+    else if (playerBet > playerMoney) {
+
+        alert("You don't have enough Money to place that bet.");
+
+    }
+
+    else if (playerBet <= playerMoney) {
+
+        // Add Spin Reels code here
+        spinResult = Reels();
+        fruits = spinResult[0] + " - " + spinResult[1] + " - " + spinResult[2];
+        console.log(fruits);
+
+
+        for (var tile = 0; tile < 3; tile++) {
 
 
 
+            reelContainers[tile].removeAllChildren();
+
+            tiles[tile] = new createjs.Bitmap("assets/images/" + spinResult[tile] + ".png");
+            tiles[tile].x = 110 + (113 * tile);
+            tiles[tile].y = 239;
+
+
+            reelContainers[tile].addChild(tiles[tile]);
+
+            console.log(game.getNumChildren());
+        }
+        determineWinnings();
+        showPlayerStats();
+    }
+}
+
+function bet1() {
+    playerBet = 1;
+    betText.text = playerBet.toString();
+
+    
+} //function bet1 ends
+
+function betTen() {
+    playerBet = 10;
+    betText.text = playerBet.toString();
+
+   
+} //function bet10 ends
+
+function bet100() {
+    playerBet = 100;
+    betText.text = playerBet.toString();
+
+  
+} //function bet100 ends
 
 /* Utility function to check if a value falls within a range of bounds */
 function checkRange(value, lowerBounds, upperBounds) {
@@ -183,12 +329,14 @@ function determineWinnings() {
         if (sevens == 1) {
             winnings = playerBet * 5;
         }
-       
+        winNumber++;
+        showWinMessage();
+        // showWinMessage();
     }
     else {
         lossNumber++;
 
-       
+        showLossMessage();
     }
 
 }
@@ -273,7 +421,6 @@ function createUI(): void {
     betText = new createjs.Text(playerBet.toString(), "30px Consolas", "#F00909");
     betText.x = 355;
     betText.y = 345;
-    // betText.regX = betText.getBounds().width
     game.addChild(betText);
 
 }
@@ -290,11 +437,19 @@ function checkJackPot() {
         playerMoney += jackpot;
         jackpot = 1000;
 
-        createjs.Sound.play("jackpot");
+      
     }
 }
 
+/* Utility function to show Player Stats */
+function showPlayerStats() {
 
+    winRatio = winNumber / turn;
+
+    winRatioText.text = winNumber.toString();
+
+    playerAmountText.text = playerMoney.toString();
+}
 
 // Our Game Kicks off in here
 function main() {
@@ -307,4 +462,9 @@ function main() {
     // Create Slotmachine User Interface
     createUI();
     stage.addChild(game);
+
+    for (var i = 0; i < 3; i++) {
+        reelContainers[i] = new createjs.Container();
+        game.addChild(reelContainers[i]);
+    }
 }
