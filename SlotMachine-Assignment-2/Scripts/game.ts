@@ -1,4 +1,14 @@
-﻿var canvas;
+﻿/**
+* Author: Chandan Dadral
+* Last Modified Date: February 21, 2015
+* Last Modified By: Chandan Dadral
+* 
+* Description: This program creates the Slot Machine which allows the user to Choose their bet and Gives $1000 to user 
+* Shows the images in reels and images are random and user can reset the game as well. It has a sound Effects as well and user has the opportunity to win jackpot.
+**/
+
+//All Variables are defined on the top 
+var canvas;
 var stage: createjs.Stage;
 
 // Game Objects 
@@ -18,15 +28,11 @@ var jackpotImg: createjs.Bitmap;
 var tiles: createjs.Bitmap[] = [];
 var reelContainers: createjs.Container[] = [];
 
-
+//Preloaded the Sound and gave seperate Id to each and Every sound
 createjs.Sound.registerSound({ id: "click", src: "assets/sounds/click.mp3" });
-
 createjs.Sound.registerSound({ id: "hover", src: "assets/sounds/hover.mp3" });
-
 createjs.Sound.registerSound({ id: "won", src: "assets/sounds/won.mp3" });
-
 createjs.Sound.registerSound({ id: "spin", src: "assets/sounds/spin.mp3" });
-
 createjs.Sound.registerSound({ id: "jackpot", src: "assets/sounds/jackpot.mp3" });
 
 
@@ -54,6 +60,7 @@ var bells = 0;
 var sevens = 0;
 var blanks = 0;
 
+//This Function initialize the Game 
 function init() {
     canvas = document.getElementById("canvas");
     stage = new createjs.Stage(canvas);
@@ -64,8 +71,8 @@ function init() {
     main();
 }
 
+//This mEthod updates the Stage
 function gameLoop() {
-
 
     stage.update(); // Refreshes our stage
 }
@@ -100,13 +107,14 @@ function resetAll() {
     winRatioText.text = winnings.toString();
     winningsText.text = winnings.toString();
     betText.text = playerBet.toString();
-
+    //Removes Jackpot Bitmap from the top of the SlotMachine
     game.removeChild(jackpotImg);
     createjs.Sound.play("click");
 }
 
 
-// Event handlers
+// Event handlers for Hover on the Bitmap Objects when user hovers it decreases the Opacity 
+// It also gives the good sound Effect
 
 function spinButtonOut() {
     spinButton.alpha = 1.0;
@@ -167,6 +175,11 @@ function bet10ButtonOver() {
     createjs.Sound.play("hover");
 }
 
+//This funtion Exits the Tab when user Clicks the Exit Button
+function exitButtonClick() {
+    var x = confirm('Are you sure want to exit. Do not forget to CashOut');
+    if (x) window.close();
+}
 
 /* Utility function to show a win message and increase player money */
 function showWinMessage() {
@@ -174,6 +187,8 @@ function showWinMessage() {
     winningsText.text = winnings.toString();
     resetFruitTally();
     checkJackPot();
+
+    //Gives Sound of Cheering when User wins 
     createjs.Sound.play("won");
 
 }
@@ -185,6 +200,7 @@ function showLossMessage() {
     resetFruitTally();
 }
 
+//Funtion Spins the Slot Machine and Shows the Apporoprate Images 
 
 function spinReels() {
 
@@ -210,14 +226,13 @@ function spinReels() {
             fruits = spinResult[0] + " - " + spinResult[1] + " - " + spinResult[2];
             console.log(fruits);
 
-
+            //get the respecive images for the spin results
             for (var tile = 0; tile < 3; tile++) {
-
-
 
                 reelContainers[tile].removeAllChildren();
 
                 tiles[tile] = new createjs.Bitmap("assets/images/" + spinResult[tile] + ".png");
+                //Co-ordinates of the spin Images
                 tiles[tile].x = 110 + (113 * tile);
                 tiles[tile].y = 239;
 
@@ -226,21 +241,28 @@ function spinReels() {
 
                 console.log(game.getNumChildren());
             }
-            determineWinnings();
-            showPlayerStats();
+            determineWinnings(); //checks Player Lost or Won 
+            showPlayerStats();//Displays the Player Results
         }
     }
+    //Shows Error Message when player didn't selected the bet Amount
     else {
         alert("Please enter a bet amount");
     }
 }
+//Functions for the BEtButton Clicked
+
+//IF user Selects the bet to be 1 
 function bet1() {
     playerBet = 1;
     betText.text = playerBet.toString();
 
+    //Gives sound Effect aswell
     createjs.Sound.play("click");
+
 } //function bet1 ends
 
+//If Players sets bet to be 10
 function betTen() {
     playerBet = 10;
     betText.text = playerBet.toString();
@@ -248,6 +270,7 @@ function betTen() {
     createjs.Sound.play("click");
 } //function bet10 ends
 
+//if Player sets the bet to be 100
 function bet100() {
     playerBet = 100;
     betText.text = playerBet.toString();
@@ -376,6 +399,9 @@ function determineWinnings() {
 
 }
 
+/**
+This Function Creates the User interface and Shows the Buttons of Appropriate Positions
+**/
 function createUI(): void {
     // instantiate my background
     background = new createjs.Bitmap("assets/images/backGround22.png");
@@ -386,11 +412,12 @@ function createUI(): void {
     spinButton.x = 368;
     spinButton.y = 422;
     game.addChild(spinButton);
-
+    //Spins Button Evet Handlers
     spinButton.addEventListener("click", spinReels);
     spinButton.addEventListener("mouseover", spinButtonOver);
     spinButton.addEventListener("mouseout", spinButtonOut);
 
+    //Reset Button which Resets the Game to Original State
     resetButton = new createjs.Bitmap("assets/images/reset_button.png");
     resetButton.x = 95;
     resetButton.y = 423;
@@ -400,6 +427,7 @@ function createUI(): void {
     resetButton.addEventListener("mouseover", resetButtonOver);
     resetButton.addEventListener("mouseout", resetButtonOut);
 
+    //Maximum Bet Button for the user 
     betMax = new createjs.Bitmap("assets/images/bet_max.png");
     betMax.x = 300;
     betMax.y = 430;
@@ -409,6 +437,7 @@ function createUI(): void {
     betMax.addEventListener("mouseover", betMaxButtonOver);
     betMax.addEventListener("mouseout", betMaxButtonOut);
 
+    //Minimum BEt for the USer button
     betOne = new createjs.Bitmap("assets/images/bet_one.png");
     betOne.x = 190;
     betOne.y = 430;
@@ -418,7 +447,7 @@ function createUI(): void {
     betOne.addEventListener("mouseover", betOneButtonOver);
     betOne.addEventListener("mouseout", betOneButtonOut);
 
-
+    //User can Bet 10 Aswell 
     bet10 = new createjs.Bitmap("assets/images/bet_10.png");
     bet10.x = 246;
     bet10.y = 430;
@@ -428,12 +457,14 @@ function createUI(): void {
     bet10.addEventListener("mouseover", bet10ButtonOver);
     bet10.addEventListener("mouseout", bet10ButtonOut);
 
+    //Exit Button Bitmap
     exitButton = new createjs.Bitmap("assets/images/exoit_button.png");
     exitButton.x = 406;
     exitButton.y = 125;
     game.addChild(exitButton);
 
-    //  exitButton.addEventListener("click", exitButtonClick);
+    //Events for the Exit Button
+    exitButton.addEventListener("click", exitButtonClick);
     exitButton.addEventListener("mouseover", exitButtonOver);
     exitButton.addEventListener("mouseout", exitButtonOut);
 
@@ -456,12 +487,10 @@ function createUI(): void {
     betText = new createjs.Text(playerBet.toString(), "30px Consolas", "#F00909");
     betText.x = 355;
     betText.y = 345;
-    // betText.regX = betText.getBounds().width
     game.addChild(betText);
 
+    //Jackpot image on the top if user won the Jackpot
     jackpotImg = new createjs.Bitmap("assets/images/jackpot.png");
-
-    // game.addChild(jackpotImg);
 
 }
 
@@ -479,6 +508,7 @@ function checkJackPot() {
         alert("You Won the $" + jackpot + " Jackpot!!");
         playerMoney += jackpot;
         jackpot = 1000;
+        //Sound if User won the Jackpot
         createjs.Sound.play("jackpot");
     }
 }
