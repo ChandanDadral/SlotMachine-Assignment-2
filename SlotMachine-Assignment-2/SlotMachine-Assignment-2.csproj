@@ -59,6 +59,8 @@
     <Reference Include="System.EnterpriseServices" />
   </ItemGroup>
   <ItemGroup>
+    <Content Include="assets\images\BackGroundneww.png" />
+    <Content Include="assets\images\cssBack.jpg" />
     <Content Include="assets\images\icons\favicon.png" />
     <Content Include="assets\images\icons\fi-social-facebook.svg" />
     <Content Include="assets\images\icons\fi-social-facebook1.png" />

@@ -4,7 +4,8 @@
 * Last Modified By: Chandan Dadral
 * 
 * Description: This program creates the Slot Machine which allows the user to Choose their bet and Gives $1000 to user 
-* Shows the images in reels and images are random and user can reset the game as well. It has a sound Effects as well and user has the opportunity to win jackpot.
+* Shows the images in reels and images are random and user can reset the game as well. 
+*It has a sound Effects as well and user has the opportunity to win jackpot. Machine Displays the Jackpot Image when User Wins the Jackpot Amount
 **/
 
 //All Variables are defined on the top 
@@ -20,6 +21,7 @@ var bet10: createjs.Bitmap;
 var betOne: createjs.Bitmap;
 var betMax: createjs.Bitmap;
 var exitButton: createjs.Bitmap;
+var jackpotText: createjs.Text;
 var betText: createjs.Text;
 var winningsText: createjs.Text;
 var playerAmountText: createjs.Text;
@@ -94,6 +96,9 @@ function resetFruitTally() {
 
 /* Utility function to reset the player stats */
 function resetAll() {
+    for (var index = 0; index < 3; index++) {
+        reelContainers[index].removeAllChildren();
+    }
     playerMoney = 1000;
     winnings = 0;
     jackpot = 5000;
@@ -404,7 +409,7 @@ This Function Creates the User interface and Shows the Buttons of Appropriate Po
 **/
 function createUI(): void {
     // instantiate my background
-    background = new createjs.Bitmap("assets/images/backGround22.png");
+    background = new createjs.Bitmap("assets/images/backGroundneww.png");
     game.addChild(background);
 
     // Spin Button
@@ -430,7 +435,7 @@ function createUI(): void {
     //Maximum Bet Button for the user 
     betMax = new createjs.Bitmap("assets/images/bet_max.png");
     betMax.x = 300;
-    betMax.y = 430;
+    betMax.y = 423;
     game.addChild(betMax);
 
     betMax.addEventListener("click", bet100);
@@ -440,7 +445,7 @@ function createUI(): void {
     //Minimum BEt for the USer button
     betOne = new createjs.Bitmap("assets/images/bet_one.png");
     betOne.x = 190;
-    betOne.y = 430;
+    betOne.y = 423;
     game.addChild(betOne);
 
     betOne.addEventListener("click", bet1);
@@ -450,7 +455,7 @@ function createUI(): void {
     //User can Bet 10 Aswell 
     bet10 = new createjs.Bitmap("assets/images/bet_10.png");
     bet10.x = 246;
-    bet10.y = 430;
+    bet10.y = 423;
     game.addChild(bet10);
 
     bet10.addEventListener("click", betTen);
@@ -489,6 +494,11 @@ function createUI(): void {
     betText.y = 345;
     game.addChild(betText);
 
+    jackpotText = new createjs.Text(jackpot.toString(), "30px Consolas", "#F00909");
+    jackpotText.x = 250;
+    jackpotText.y = 456;
+    game.addChild(jackpotText);
+
     //Jackpot image on the top if user won the Jackpot
     jackpotImg = new createjs.Bitmap("assets/images/jackpot.png");
 
@@ -510,6 +520,7 @@ function checkJackPot() {
         jackpot = 1000;
         //Sound if User won the Jackpot
         createjs.Sound.play("jackpot");
+        jackpotText.text = jackpot.toString();
     }
 }
 
