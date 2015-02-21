@@ -8,6 +8,39 @@
 *It has a sound Effects as well and user has the opportunity to win jackpot. Machine Displays the Jackpot Image when User Wins the Jackpot Amount
 **/
 
+/**         Version History
+VERSION #1.0 – FEBRUARY 18, 2015
+•	Feature: Used the CreateJs Boiler Template and Initialized the Slot Machine Project 
+VERSION #1.1 - FEBRUARY 18, 2015
+•	Created the images for the slot machine interface and added the buttons 
+•	Got the Co-ordinates in Excel sheet and with pixel precision of all the elements to be placed.							        
+VERSION #1.2 – FEBRUARY 19, 2015
+•	Added Buttons to the Canvas and Set the Background of the slot machine with accurate co-ordinates.
+•	 Added hover effect of the buttons.
+•	Bug fixed: Co-ordinates for exit buttons were fixed in this version.
+VERSION #1.3 - FEBRUARY 19, 2015
+•	Created the Spin effect for the for slot machine reels which displays the images. 
+•	Also, Displays the Text in the labels of User Output. 
+•	Added text label to the background image of the text shown.   
+VERSION #1.4 - FEBRUARY 20, 2015
+•	Added Sound Effects to slot machine for every buttons and for jackpot, spin and winning.
+•	Added an image on the top of slot machine when user wins jackpot and displays the message.
+•	In slot machine it is not showing, how many times user won. Added text field for number of winnings. 
+•	Bug fixed: Reset is not changes the images to default in reels. Set the images to white when user clicks reset.
+VERSION #1.5 - FEBRUARY 20, 2015
+•	Made exit button working, when user clicks the exit button it asks for the game to exit and closes the tab 
+VERSION #1.6 – FEBRUARY 20, 2015
+•	Added footer for Dadral Production on the bottom of the slot machine.
+•	Alignment of the code was done and made the slot machine in center of the page.
+VERSION #1.7 – FEBRUARY 20, 2015
+•	     Added text for the current jackpot amount which is shown at the bottom of the slot machine with graphical label. 
+•	     Also, changed the sound when user won the jackpot.
+VERSION #1.7 – FEBRUARY 20, 2015
+•	     Added text for the current jackpot amount which is shown at the bottom of the slot machine with graphical label. 
+•	     Also, changed the sound when user won the jackpot.
+
+**/
+
 //All Variables are defined on the top 
 var canvas;
 var stage: createjs.Stage;
@@ -21,14 +54,16 @@ var bet10: createjs.Bitmap;
 var betOne: createjs.Bitmap;
 var betMax: createjs.Bitmap;
 var exitButton: createjs.Bitmap;
+var jackpotImg: createjs.Bitmap;  //jackpot image o the top of the page
+
+//Text Variables
 var jackpotText: createjs.Text;
 var betText: createjs.Text;
 var winningsText: createjs.Text;
 var playerAmountText: createjs.Text;
 var winRatioText: createjs.Text;
-var jackpotImg: createjs.Bitmap;
-var tiles: createjs.Bitmap[] = [];
-var reelContainers: createjs.Container[] = [];
+var tiles: createjs.Bitmap[] = [];  //Tiles for the slotmachine
+var reelContainers: createjs.Container[] = [];  //bitmap array for reel container
 
 //Preloaded the Sound and gave seperate Id to each and Every sound
 createjs.Sound.registerSound({ id: "click", src: "assets/sounds/click.mp3" });
@@ -109,6 +144,7 @@ function resetAll() {
     winRatio = 0;
     showPlayerStats();
 
+    //Resets the text on the slot machine
     winRatioText.text = winnings.toString();
     winningsText.text = winnings.toString();
     betText.text = playerBet.toString();
@@ -118,9 +154,9 @@ function resetAll() {
 }
 
 
-// Event handlers for Hover on the Bitmap Objects when user hovers it decreases the Opacity 
+/** Event handlers for Hover on the Bitmap Objects when user hovers it decreases the Opacity 
 // It also gives the good sound Effect
-
+**/
 function spinButtonOut() {
     spinButton.alpha = 1.0;
 }
@@ -211,8 +247,9 @@ function spinReels() {
 
     createjs.Sound.play("spin");
     game.removeChild(jackpotImg);
-    if (playerBet != 0) {
-        if (playerMoney == 0) {
+    if (playerBet != 0) //checks if player has choses the bet amount
+    {
+        if (playerMoney == 0) { //shows error message if payer money is zero
             if (confirm("You ran out of Money! \nDo you want to play again?")) {
                 resetAll();
                 showPlayerStats();
@@ -473,27 +510,31 @@ function createUI(): void {
     exitButton.addEventListener("mouseover", exitButtonOver);
     exitButton.addEventListener("mouseout", exitButtonOut);
 
+    //Text for the Amount that player have
     playerAmountText = new createjs.Text(playerMoney.toString(), "30px Consolas", "#F00909");
     playerAmountText.x = 99;
     playerAmountText.y = 345;
     game.addChild(playerAmountText);
 
+    //Text for the Number of Times user won
     winRatioText = new createjs.Text(winNumber.toString(), "30px Consolas", "#F00909");
     winRatioText.x = 220;
     winRatioText.y = 345;
     game.addChild(winRatioText);
 
-
+    //Text for the amount that user won in Specific Spin
     winningsText = new createjs.Text(winnings.toString(), "30px Consolas", "#F00909");
     winningsText.x = 276;
     winningsText.y = 345;
     game.addChild(winningsText);
 
+    //Text for the amount the user is going to bet
     betText = new createjs.Text(playerBet.toString(), "30px Consolas", "#F00909");
     betText.x = 355;
     betText.y = 345;
     game.addChild(betText);
 
+    //Jackpot amount that changes 
     jackpotText = new createjs.Text(jackpot.toString(), "30px Consolas", "#F00909");
     jackpotText.x = 250;
     jackpotText.y = 456;
@@ -546,6 +587,7 @@ function main() {
     createUI();
     stage.addChild(game);
 
+    //adds the reel container to the game
     for (var i = 0; i < 3; i++) {
         reelContainers[i] = new createjs.Container();
         game.addChild(reelContainers[i]);
